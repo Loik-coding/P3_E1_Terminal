@@ -55,8 +55,7 @@ class command {
 
 
 
-    public function search() {
-        $searchTerm = readline("Entrez le nom à rechercher : ");
+    public function search($searchTerm) {
         $dbConnect = new DBconnect();
         $contactManager = new ContactManager($dbConnect->getPDO());
         $contacts = $contactManager->findAll();
@@ -72,10 +71,11 @@ class command {
                 );
                 $found = true;
             }
-            if (!$found) {
-                echo "Aucun contact trouvé avec le nom : $searchTerm\n";
-            }
         }
+        if (!$found) {
+            echo "Aucun contact trouvé avec le nom : $searchTerm\n";
+        }
+        
     }
 
     public function create($name, $email, $phone) {
@@ -108,6 +108,25 @@ class command {
         }
     }
 
+    public function modify($id, $name, $email, $phone_number) {
+        $dbConnect = new DBconnect();
+        $contactManager = new ContactManager($dbConnect->getPDO());
+        $contact = $contactManager->findById($id);
+        if (!empty($contact)) {
+            $contact->setName($name);
+            $stmt = $dbConnect->getPDO()->prepare('UPDATE contact SET name = :name, email = :email, phone_number = :phone_number WHERE id = :id');
+            $stmt->execute([
+                'name' => $contact->getName(),
+                'email' => $email,
+                'phone_number' => $phone_number,
+                'id' => $id
+            ]);
+            echo "Contact modifié avec succès !\n";
+        } else {
+            echo "Aucun contact trouvé avec l'ID : $id\n";
+        }
+    }
+
     public function help() {
         echo "\n";
         echo "Commandes disponibles :\n";
@@ -115,8 +134,9 @@ class command {
         echo "list - Affiche la liste de tous les contacts\n";
         echo "detail <id> - Affiche les détails d'un contact spécifique\n";
         echo "create <name>;<email>;<phone_number> - Crée un nouveau contact\n";
-        echo "search - Recherche un contact par nom\n";
+        echo "search <term> - Recherche un contact par nom\n";
         echo "delete <id> - Supprime un contact spécifique\n";
+        echo "modify <id>;<name>;<email>;<phone_number> - Modifie un contact spécifique\n";
         echo "help - Affiche cette aide\n";
         echo "exit - Quitte l'application\n";
     }

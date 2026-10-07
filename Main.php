@@ -28,8 +28,16 @@ while (true) {
     }
 
 
-    if ($line === 'search') {
-        $command->search();
+    if (preg_match('/^search\s+(.+)$/', $line, $matches)) {
+        $command->search($matches[1]);
+    }
+
+    if (preg_match('/^modify\s+(\d+);(.+);(.+);(.+)$/', $line, $matches)) {
+        $id = $matches[1];
+        $name = $matches[2];
+        $email = $matches[3];
+        $phone_number = $matches[4];
+        $command->modify($id, $name, $email, $phone_number);
     }
 
     if (preg_match('/^delete\s(\d+)$/', $line, $id)) {
