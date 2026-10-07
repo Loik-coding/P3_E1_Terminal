@@ -107,4 +107,17 @@ class command {
             echo "Aucun contact trouvé avec l'ID : $id\n";
         }
     }
+
+    public function help() {
+        echo "\n";
+        echo "Commandes disponibles :\n";
+        echo "\n";
+        echo "list - Affiche la liste de tous les contacts\n";
+        echo "detail <id> - Affiche les détails d'un contact spécifique\n";
+        echo "create <name>;<email>;<phone_number> - Crée un nouveau contact\n";
+        echo "search - Recherche un contact par nom\n";
+        echo "delete <id> - Supprime un contact spécifique\n";
+        echo "help - Affiche cette aide\n";
+        echo "exit - Quitte l'application\n";
+    }
 }

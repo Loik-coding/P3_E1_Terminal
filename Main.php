@@ -20,7 +20,7 @@ while (true) {
         $command->detail($id[1]);
     }
 
-    if (preg_match('/^create\s(\S+)\s(\S+)\s(\S+)$/', $line, $matches)) {
+    if (preg_match('/^create\s+(.+);(.+);(.+)$/', $line, $matches)) {
         $name = $matches[1];
         $email = $matches[2];
         $phone_number = $matches[3];
@@ -34,6 +34,10 @@ while (true) {
 
     if (preg_match('/^delete\s(\d+)$/', $line, $id)) {
         $command->delete($id[1]);
+    }
+
+    if ($line === 'help') {
+        $command->help();
     }
 
     if ($line === 'exit') {
