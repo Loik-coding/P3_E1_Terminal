@@ -77,4 +77,17 @@ class command {
             }
         }
     }
+
+    public function create() {
+        $name = readline("Entrez le nom du contact : ");
+        $email = readline("Entrez l'email du contact : ");
+        $phone = readline("Entrez le numéro de téléphone du contact (optionnel) : ");
+
+        $dbConnect = new DBconnect();
+        $contactManager = new ContactManager($dbConnect->getPDO());
+        $contact = new Contact(null, $name, $email, $phone);
+        $contactManager->create($contact);
+
+        echo "Contact créé avec succès !\n";
+    }
 }

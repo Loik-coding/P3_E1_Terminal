@@ -38,6 +38,14 @@ class ContactManager {
         }
         return null;
     }
+
+    public function create(Contact $contact) {
+        $stmt = $this->pdo->prepare('INSERT INTO contact (name, email, phone_number) VALUES (:name, :email, :phone_number)');
+        $stmt->execute([
+            'name' => $contact->getName(),
+            'email' => $contact->getEmail(),
+            'phone_number' => $contact->getPhone()
+        ]);
+    }
 }
 
-?>

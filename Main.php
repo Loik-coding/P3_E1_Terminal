@@ -20,11 +20,15 @@ while (true) {
         $command->detail($id[1]);
     }
 
+    if ($line === 'create') {
+        $command->create();
+    }
+
 
     if ($line === 'search') {
-
-
+        $command->search();
     }
+
 
     if ($line === 'exit') {
         echo "Au revoir !\n";
