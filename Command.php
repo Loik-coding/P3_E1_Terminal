@@ -37,22 +37,19 @@ class command {
     public function detail($id){
         $dbConnect = new DBconnect();
         $contactManager = new ContactManager($dbConnect->getPDO());
-        $contacts = $contactManager->findAll();  
-        $found = false;
-        foreach ($contacts as $contact) {
-            if (stripos($contact->getId(), $id) !== false) {
-                echo sprintf(
-                    "ID: %d, Name: %s, Email: %s, Phone: %s\n",
+        $contact = $contactManager->findById($id);
+        if (!empty($contact)) {
+            echo sprintf(
+                "ID: %d, Name: %s, Email: %s, Phone: %s\n",
                     $contact->getId(),
                     $contact->getName(),
                     $contact->getEmail(),
                     $contact->getPhone() ?? 'N/A'
                 );
                 $found = true;
-            }
-        }
-        if (!$found) {
-            echo "Aucun contact trouvé avec l'ID : $id\n";
+        } else 
+        {
+            echo "Aucun contact trouvé avec l'ID : $id\n";       
         }
     }
 

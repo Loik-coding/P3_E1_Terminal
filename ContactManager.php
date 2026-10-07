@@ -22,6 +22,22 @@ class ContactManager {
         }
         return $contacts;
     }
+
+    public function findById($id) {
+        $stmt = $this->pdo->prepare('SELECT * FROM contact WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return new Contact(
+                $row['id'],
+                $row['name'],
+                $row['email'],
+                $row['phone_number']
+            );
+        }
+        return null;
+    }
 }
 
 ?>
