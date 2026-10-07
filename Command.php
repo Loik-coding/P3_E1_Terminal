@@ -9,10 +9,10 @@ class command {
         $contacts = $contactManager->findAll();
 
         // Affichage des contacts sous forme de texte
-        echo "Liste des contacts :\n";
-        foreach ($contacts as $contact) {
-            echo $contact->toString() . "\n";
-        }
+        //echo "Liste des contacts :\n";
+        //foreach ($contacts as $contact) {
+        //    echo $contact->toString() . "\n";
+        //}
 
         // Affichage des contacts sous forme de tableau avec bordures
         echo "Liste des contacts :\n";
@@ -78,10 +78,10 @@ class command {
         }
     }
 
-    public function create() {
-        $name = readline("Entrez le nom du contact : ");
-        $email = readline("Entrez l'email du contact : ");
-        $phone = readline("Entrez le numéro de téléphone du contact (optionnel) : ");
+    public function create($name, $email, $phone) {
+        //$name = readline("Entrez le nom du contact : ");
+        //$email = readline("Entrez l'email du contact : ");
+        //$phone = readline("Entrez le numéro de téléphone du contact (optionnel) : ");
 
         $dbConnect = new DBconnect();
         $contactManager = new ContactManager($dbConnect->getPDO());
@@ -89,5 +89,22 @@ class command {
         $contactManager->create($contact);
 
         echo "Contact créé avec succès !\n";
+    }
+
+    public function delete($id) {
+        $dbConnect = new DBconnect();
+        $contactManager = new ContactManager($dbConnect->getPDO());
+        $contact = $contactManager->findById($id);
+
+        if (!empty($contact)) {
+            $validate = readline("Êtes-vous sûr de vouloir supprimer le contact : " . $contact->getName() . " ? (yes/no) : ");
+            if ($validate === 'yes') {
+                $stmt = $dbConnect->getPDO()->prepare('DELETE FROM contact WHERE id = :id');
+                $stmt->execute(['id' => $id]);
+                echo "Contact supprimé avec succès !\n";
+            }
+        } else {
+            echo "Aucun contact trouvé avec l'ID : $id\n";
+        }
     }
 }
