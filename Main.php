@@ -16,7 +16,11 @@ while (true) {
     if ($line === 'list') { 
         $command->list();
     }
-    
+    if (preg_match('/^detail\s(\d+)$/', $line, $id)) {
+        $command->detail($id[1]);
+    }
+
+
     if ($line === 'search') {
 
 
