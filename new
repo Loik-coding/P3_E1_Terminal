@@ -1,0 +1,28 @@
+        $dbConnect = new DBconnect();
+        $contactManager = new ContactManager($dbConnect->getPDO());
+        $contacts = $contactManager->findAll();
+
+        // Affichage des contacts sous forme de texte
+        echo "Liste des contacts :\n";
+        foreach ($contacts as $contact) {
+            echo $contact->toString() . "\n";
+        }
+
+        // Affichage des contacts sous forme de tableau avec bordures
+        echo "Liste des contacts :\n";
+        echo "+----+--------------------------------+--------------------------------+----------------+\n";
+        echo "| ID | Name                           | Email                          | Phone          |\n";
+        echo "+----+--------------------------------+--------------------------------+----------------+\n";
+
+        foreach ($contacts as $contact) {
+        echo "| "
+            . str_pad($contact->getId(), 2)
+            . " | "
+            . str_pad($contact->getName(), 30)
+            . " | "
+            . str_pad($contact->getEmail(), 30)
+            . " | "
+            . str_pad($contact->getPhone(), 14)
+            . " |\n";;
+        }
+        echo "+----+--------------------------------+--------------------------------+----------------+\n";
