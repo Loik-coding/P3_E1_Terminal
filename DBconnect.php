@@ -1,5 +1,6 @@
 <?php
 
+//Connection avec la BDD
 class DBconnect {
     private $host = 'localhost';
     private $port = 3306;

@@ -67,4 +67,8 @@ while (true) {
         echo "Au revoir !\n";
         break;
     }
+    else {
+        echo "Commande inconnue. Tapez 'help' pour la liste des commandes disponibles.\n";
+    }
+
 }

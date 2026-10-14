@@ -24,6 +24,7 @@ class ContactManager {
         return $contacts;
     }
 
+    //Fonction pour trouver un contact par son ID.
     public function findById($id) {
         $stmt = $this->pdo->prepare('SELECT * FROM contact WHERE id = :id');
         $stmt->execute(['id' => $id]);
@@ -40,6 +41,7 @@ class ContactManager {
         return null;
     }
 
+    //Fonction pour créer un nouveau contact.
     public function create(Contact $contact) {
         $stmt = $this->pdo->prepare('INSERT INTO contact (name, email, phone_number) VALUES (:name, :email, :phone_number)');
         $stmt->execute([
@@ -49,6 +51,7 @@ class ContactManager {
         ]);
     }
 
+    //Fonction pour supprimer un contact existant.
     public function delete($id) {
         $stmt = $this->pdo->prepare('DELETE FROM contact WHERE id = :id');
         $stmt->execute(['id' => $id]);
@@ -69,6 +72,7 @@ class ContactManager {
         $this->phone_number = $phone_number;
     }
 
+    //Fonction pour modifier un contact existant.
     public function modify($id, $name, $email, $phone_number): void
     {
         $contact = $this->findById($id);

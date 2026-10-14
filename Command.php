@@ -38,6 +38,7 @@ class command {
         echo "+----+--------------------------------+--------------------------------+----------------+\n";
     }
 
+    //Fonction pour afficher les détails d'un contact spécifique
     public function detail($id){
         $contact = $this->contactManager->findById($id);
         if (!empty($contact)) {
@@ -55,6 +56,7 @@ class command {
         }
     }
 
+    //Fonction pour rechercher un contact par nom
     public function search($searchTerm) {
         $contacts = $this->contactManager->findAll();
         $found = false;
@@ -76,6 +78,7 @@ class command {
         
     }
 
+    //Fonction pour rechercher un contact par nom avec paramètres
     public function searchprmtrs($matches) {
         $contacts = $this->contactManager->findAll();
         $found = false;
@@ -97,6 +100,7 @@ class command {
         
     }
 
+    //Fonction pour créer un nouveau contact avec saisie utilisateur
     public function create() {
         $name = readline("Entrez le nom du contact : ");
         $email = readline("Entrez l'email du contact : ");
@@ -107,6 +111,7 @@ class command {
         echo "Contact créé avec succès !\n";
     }
 
+    //Fonction pour créer un nouveau contact avec paramètres
     public function createprmtrs($name, $email, $phone) {
 
         $contact = new Contact(null, $name, $email, $phone);
@@ -115,6 +120,7 @@ class command {
         echo "Contact créé avec succès !\n";
     }
 
+    //Fonction pour supprimer un contact spécifique par son id
     public function delete($id) {
         $contact = $this->contactManager->findById($id);
 
@@ -129,6 +135,7 @@ class command {
         }
     }
 
+    //Fonction pour modifier un contact spécifique par son id de manière guidée
     public function modify($id) {
         $contact = $this->contactManager->findById($id);
         echo "Modification du contact : " . $contact->getName() . "\n";
@@ -165,6 +172,7 @@ class command {
     }
 
 
+    //affiche la liste des commandes disponibles
     public function help() {
         echo "\n";
         echo "Commandes disponibles :\n";
@@ -176,7 +184,7 @@ class command {
         echo "search - Recherche un contact par nom en demandant le nom à l'utilisateur\n";
         echo "search <term> - Recherche un contact par nom\n";
         echo "delete <id> - Supprime un contact spécifique\n";
-        echo "modify <id>;<name>;<email>;<phone_number> - Modifie un contact spécifique\n";
+        echo "modify <id> - Modifie un contact spécifique\n";
         echo "help - Affiche cette aide\n";
         echo "exit - Quitte l'application\n";
     }

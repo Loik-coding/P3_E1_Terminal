@@ -33,7 +33,7 @@ class Contact {
         return $this->phone_number;
     }
 
-    //Une fonction pour les afficher tous.
+    //Une fonction pour les afficher tous en chaine de caractères.
     public function __toString() : string {
         return sprintf(
             "ID: %d, Name: %s, Email: %s, Phone: %s",
