@@ -15,7 +15,7 @@ class command {
         // Affichage des contacts sous forme de texte
         //echo "Liste des contacts :\n";
         //foreach ($contacts as $contact) {
-        //    echo $contact->toString() . "\n";
+        //    echo $contact . "\n";
         //}
 
         // Affichage des contacts sous forme de tableau avec bordures

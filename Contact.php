@@ -34,7 +34,7 @@ class Contact {
     }
 
     //Une fonction pour les afficher tous.
-    public function toString() {
+    public function __toString() : string {
         return sprintf(
             "ID: %d, Name: %s, Email: %s, Phone: %s",
             $this->id,
