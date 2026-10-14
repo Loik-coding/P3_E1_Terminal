@@ -48,31 +48,9 @@ while (true) {
     }
 
     // Modify command with user input
-    if ($line === 'modify') {
-        $id = readline("Entrez l'ID du contact à modifier : ");
-        $choix = readline("Souhaitez-vous modifier le nom, l'email ou le numéro de téléphone ? (name/email/phone) : ");
-        if ($choix === 'name') {
-            $newValue = readline("Entrez le nouveau nom : ");
-            $command->modify($id, $newValue, null, null);
-        } elseif ($choix === 'email') {
-            $newValue = readline("Entrez le nouvel email : ");
-            $command->modify($id, null, $newValue, null);
-        } elseif ($choix === 'phone') {
-            $newValue = readline("Entrez le nouveau numéro de téléphone : ");
-            $command->modify($id, null, null, $newValue);
-        } else {
-            echo "Choix invalide. Veuillez choisir 'name', 'email' ou 'phone'.\n";
-        }
+    if (preg_match('/^modify\s+(.+)$/', $line, $id)) {
+        $command->modify($id[1]);
     }
-
-    // Modify command with all parameters
-    if (preg_match('/^modify\s+(\d+);(.+);(.+);(.+)$/', $line, $matches)) {
-        $id = $matches[1];
-        $name = $matches[2];
-        $email = $matches[3];
-        $phone_number = $matches[4];
-        $command->modifyFull($id, $name, $email, $phone_number);
-    }    
 
     //Delete command
     if (preg_match('/^delete\s(\d+)$/', $line, $id)) {

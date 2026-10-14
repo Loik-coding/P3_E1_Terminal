@@ -3,8 +3,9 @@
 class ContactManager {
     private $pdo;
 
-    public function __construct(PDO $pdo) {
-        $this->pdo = $pdo;
+    public function __construct() {
+        $dbConnect = new DBconnect();
+        $this->pdo = $dbConnect->getPDO();
     }
 
     //Une fonction pour les trouver tous.
@@ -46,6 +47,38 @@ class ContactManager {
             'email' => $contact->getEmail(),
             'phone_number' => $contact->getPhone()
         ]);
+    }
+
+    public function delete($id) {
+        $stmt = $this->pdo->prepare('DELETE FROM contact WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function setPhone(?string $phone_number): void
+    {
+        $this->phone_number = $phone_number;
+    }
+
+    public function modify($id, $name, $email, $phone_number): void
+    {
+        $contact = $this->findById($id);
+        if ($contact === null) {
+            echo "Contact introuvable.\n";
+            return;
+        }
+        $stmt = $this->pdo->prepare('UPDATE contact SET name = :name, email = :email, phone_number = :phone_number WHERE id = :id');
+        $stmt->execute(['name' => $name,'email' => $email,'phone_number' => $phone_number,'id' => $id]);
+
     }
 }
 

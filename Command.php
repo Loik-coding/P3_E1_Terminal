@@ -1,12 +1,16 @@
 <?php
 
 class command {
+    
     private ContactManager $contactManager;
+    
+    public function __construct() {
+        $this->contactManager = new ContactManager();
+    }
 
     public function list() {
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
-        $contacts = $contactManager->findAll();
+       
+        $contacts = $this->contactManager->findAll();
 
         // Affichage des contacts sous forme de texte
         //echo "Liste des contacts :\n";
@@ -35,9 +39,7 @@ class command {
     }
 
     public function detail($id){
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
-        $contact = $contactManager->findById($id);
+        $contact = $this->contactManager->findById($id);
         if (!empty($contact)) {
             echo sprintf(
                 "ID: %d, Name: %s, Email: %s, Phone: %s\n",
@@ -54,9 +56,7 @@ class command {
     }
 
     public function search($searchTerm) {
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
-        $contacts = $contactManager->findAll();
+        $contacts = $this->contactManager->findAll();
         $found = false;
         foreach ($contacts as $contact) {
             if (stripos($contact->getName(), $searchTerm) !== false) {
@@ -77,9 +77,7 @@ class command {
     }
 
     public function searchprmtrs($matches) {
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
-        $contacts = $contactManager->findAll();
+        $contacts = $this->contactManager->findAll();
         $found = false;
         foreach ($contacts as $contact) {
             if (stripos($contact->getName(), $matches) !== false) {
@@ -94,44 +92,36 @@ class command {
             }
         }
         if (!$found) {
-            echo "Aucun contact trouvé avec le nom : $searchTerm\n";
+            echo "Aucun contact trouvé avec le nom : $matches\n";
         }
         
     }
 
     public function create() {
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
-
         $name = readline("Entrez le nom du contact : ");
         $email = readline("Entrez l'email du contact : ");
         $phone_number = readline("Entrez le numéro de téléphone du contact : ");
 
         $contact = new Contact(null, $name, $email, $phone_number);
-        $contactManager->create($contact);
+        $this->contactManager->create($contact);
         echo "Contact créé avec succès !\n";
     }
 
     public function createprmtrs($name, $email, $phone) {
 
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
         $contact = new Contact(null, $name, $email, $phone);
-        $contactManager->create($contact);
+        $this->contactManager->create($contact);
 
         echo "Contact créé avec succès !\n";
     }
 
     public function delete($id) {
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
-        $contact = $contactManager->findById($id);
+        $contact = $this->contactManager->findById($id);
 
         if (!empty($contact)) {
             $validate = readline("Êtes-vous sûr de vouloir supprimer le contact : " . $contact->getName() . " ? (yes/no) : ");
             if ($validate === 'yes') {
-                $stmt = $dbConnect->getPDO()->prepare('DELETE FROM contact WHERE id = :id');
-                $stmt->execute(['id' => $id]);
+                $this->contactManager->delete($id);
                 echo "Contact supprimé avec succès !\n";
             }
         } else {
@@ -139,46 +129,41 @@ class command {
         }
     }
 
-    public function modify($id, $name, $email, $phone_number) {
-        $dbConnect = new DBconnect();
-        $contactManager = new ContactManager($dbConnect->getPDO());
-        $contact = $contactManager->findById($id);
-        if ($contact(name) !== null) {
-            $contact->setName($name);
-            $stmt = $dbConnect->getPDO()->prepare('UPDATE contact SET name = :name, WHERE id = :id');
-            $stmt->execute([
-                'name' => $contact->getName(),
-                'email' => $email,
-                'phone_number' => $phone_number,
-                'id' => $id
-            ]);
+    public function modify($id) {
+        $contact = $this->contactManager->findById($id);
+        echo "Modification du contact : " . $contact->getName() . "\n";
+        $modifyName = readline("Souhaitez-vous modifier le nom du contact : " . $contact->getName() . " ? (yes/no) : ");
+        if ($modifyName === 'yes') {
+            $name = readline("Entrez le nouveau nom du contact : ");
         }
-        if ($contact(email) !== null) {
-            $contact->setEmail($email);
+        else {
+            $name = $contact->getName();
         }
-        if ($contact(phone_number) !== null) {
-            $contact->setPhone($phone_number);
+
+        $modifyEmail = readline("Souhaitez-vous modifier l'email (" . $contact->getEmail() . ") ? (yes/no) : ");
+        if ($modifyEmail === 'yes') {
+            $email = readline("Entrez le nouvel email du contact : ");
+        }
+        else {
+            $email = $contact->getEmail();
+        }
+
+        $modifyPhone = readline("Souhaitez-vous modifier le numéro de téléphone (" . $contact->getPhone() . ") ? (yes/no) : ");
+        if ($modifyPhone === 'yes') {
+            $phone_number = readline("Entrez le nouveau numéro de téléphone du contact : ");
+        }
+        else   
+        {
+            $phone_number = $contact->getPhone();
+        }
+        $this->contactManager->modify($id, $name, $email, $phone_number);
+        if ($modifyEmail === 'no' && $modifyName === 'no' && $modifyPhone === 'no') {
+            echo "Aucune modification effectuée pour le contact : " . $contact->getName() . "\n";
+        } else {
+            echo "Contact mis à jour avec succès : " . $contact->getName() . " - " . $contact->getEmail() . " - " . $contact->getPhone() . "\n";
         }
     }
 
-    public function modifyFull($id, $name, $email, $phone_number) {
-        $dbConnect = new DBconnect(); 
-        $contactManager = new ContactManager($dbConnect->getPDO());
-        $contact = $contactManager->findById($id);   
-        if (!empty($contact)) {
-            $contact->setName($name);
-            $stmt = $dbConnect->getPDO()->prepare('UPDATE contact SET name = :name, email = :email, phone_number = :phone_number WHERE id = :id');
-            $stmt->execute([
-                'name' => $contact->getName(),
-                'email' => $email,
-                'phone_number' => $phone_number,
-                'id' => $id
-            ]);
-            echo "Contact modifié avec succès !\n";
-        } else {
-            echo "Aucun contact trouvé avec l'ID : $id\n";
-        }
-    }
 
     public function help() {
         echo "\n";
