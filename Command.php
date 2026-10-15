@@ -163,11 +163,12 @@ class command {
         {
             $phone_number = $contact->getPhone();
         }
-        $this->contactManager->modify($id, $name, $email, $phone_number);
+        $contact = new Contact($id, $name, $email, $phone_number);
+        $this->contactManager->modify($contact);
         if ($modifyEmail === 'no' && $modifyName === 'no' && $modifyPhone === 'no') {
             echo "Aucune modification effectuée pour le contact : " . $contact->getName() . "\n";
         } else {
-            echo "Contact mis à jour avec succès : " . $contact->getName() . " - " . $contact->getEmail() . " - " . $contact->getPhone() . "\n";
+            echo "Contact mis à jour avec succès : " . $name . " - " . $email . " - " . $phone_number . "\n";
         }
     }
 

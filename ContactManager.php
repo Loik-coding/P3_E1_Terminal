@@ -8,6 +8,7 @@ class ContactManager {
         $this->pdo = $dbConnect->getPDO();
     }
 
+
     //Une fonction pour les trouver tous.
     public function findAll() {
         $findAll = $this->pdo->query('SELECT * FROM contact');
@@ -57,31 +58,17 @@ class ContactManager {
         $stmt->execute(['id' => $id]);
     }
 
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    public function setPhone(?string $phone_number): void
-    {
-        $this->phone_number = $phone_number;
-    }
 
     //Fonction pour modifier un contact existant.
-    public function modify($id, $name, $email, $phone_number): void
+    public function modify($modifiedContact): void
     {
-        $contact = $this->findById($id);
+        $contact = $this->findById($modifiedContact->getId());
         if ($contact === null) {
             echo "Contact introuvable.\n";
             return;
         }
         $stmt = $this->pdo->prepare('UPDATE contact SET name = :name, email = :email, phone_number = :phone_number WHERE id = :id');
-        $stmt->execute(['name' => $name,'email' => $email,'phone_number' => $phone_number,'id' => $id]);
+        $stmt->execute(['name' => $modifiedContact->getName(),'email' => $modifiedContact->getEmail(),'phone_number' => $modifiedContact->getPhone(),'id' => $modifiedContact->getId()]);
 
     }
 }

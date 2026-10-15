@@ -13,23 +13,23 @@ class Contact {
         $this->phone_number = $phone_number;
     }
 
-    public function getId() {
+    public function getId() : ?int {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName() : ?string {
         return $this->name;
     }
 
-    public function setName($name) {
+    public function setName(?string $name) {
         $this->name = $name;
     }
 
-    public function getEmail() {
+    public function getEmail() : string {
         return $this->email;
     }
 
-    public function getPhone() {
+    public function getPhone() : ?string {
         return $this->phone_number;
     }
 
